@@ -1,6 +1,7 @@
 package edu.upd.engg.cheintel.labsafe;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     ImageView imageView1;
     Button button1;
     Button button2;
+    Button button3;
     EditText editText;
     ListView listView;
     List<String> current;
@@ -56,6 +58,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             imageView1.setVisibility(View.VISIBLE);
             button1.setVisibility(View.VISIBLE);
             button2.setVisibility(View.VISIBLE);
+            button3.setVisibility(View.VISIBLE);
             editText.setVisibility(View.GONE);
             listView.setVisibility(View.GONE);
             state = "0";
@@ -69,10 +72,12 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         imageView1 = findViewById(R.id.imageView1);
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
         editText = findViewById(R.id.editText);
         listView = findViewById(R.id.listView);
         button1.setVisibility(View.VISIBLE);
         button2.setVisibility(View.VISIBLE);
+        button3.setVisibility(View.VISIBLE);
         editText.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
         map = new HashMap<>();
@@ -94,6 +99,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                 imageView1.setVisibility(View.GONE);
                 button1.setVisibility(View.GONE);
                 button2.setVisibility(View.GONE);
+                button3.setVisibility(View.GONE);
                 editText.setVisibility(View.VISIBLE);
                 listView.setVisibility(View.VISIBLE);
                 typed = "";
@@ -121,6 +127,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                 imageView1.setVisibility(View.GONE);
                 button1.setVisibility(View.GONE);
                 button2.setVisibility(View.GONE);
+                button3.setVisibility(View.GONE);
                 editText.setVisibility(View.VISIBLE);
                 listView.setVisibility(View.VISIBLE);
                 listView.setTextFilterEnabled(true);
@@ -268,6 +275,10 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         });
     }
 
+    public void rate(View view){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/q64HES"));
+        startActivity(browserIntent);
+    }
 
 
 }
