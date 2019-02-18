@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".WhereIsYourEmergency">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="255dp"
+        android:layout_height="94dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/desc"
+        android:src="@drawable/logo2"/>
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:hint="@string/hint"
+        android:importantForAutofill="no">
+        <requestFocus />
+    </EditText>
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="290dp"
+        android:layout_height="130dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#ffc62828"
+        android:fontFamily="sans-serif-condensed"
+        android:text="WHAT IS YOUR EMERGENCY?"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintHorizontal_bias="0.862"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView1"
+        tools:ignore="HardcodedText" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="286dp"
+        android:layout_height="119dp"
+        android:layout_marginBottom="72dp"
+        android:background="#ff1565c0"
+        android:fontFamily="sans-serif-condensed"
+        android:text="CHEMICAL DATABASE"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.128"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button1"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="70dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="216dp"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/desc"/>
+    <!--android:src="@drawable/hazardd"-->
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="88dp"
+        android:layout_height="79dp"
+        android:layout_marginTop="440dp"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/desc"/>
+    <!--android:src="@drawable/database"-->
+</android.support.constraint.ConstraintLayout>

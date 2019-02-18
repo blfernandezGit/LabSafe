@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LabSafe</string>
+    <string name="chem_data">LabSafe Chemical Database</string>
+    <string name="emergency">LabSafe Emergency List</string>
+    <string name="hint">What is your emergency?</string>
+    <string name="desc">Image</string>
+</resources>
