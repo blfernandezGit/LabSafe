@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -25,7 +26,16 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
+import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
+import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,7 +48,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     OWLDataFactory df;
     HashMap<String, OWLIndividual> map;
     HashMap<String,OWLClass> emergencyMap;
-    HashMap<String, OWLIndividual> repeatMap;
+//    HashMap<String, OWLIndividual> repeatMap;
     ImageView imageView1;
     Button button1;
     Button button2;
@@ -82,13 +92,13 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         listView.setVisibility(View.GONE);
         map = new HashMap<>();
         try {
-            run();
+            loadOntology();
         } catch (Exception e) {
             e.printStackTrace();
         }
         emergencyMap = new HashMap<>();
         try {
-            run();
+            loadOntology();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,33 +159,64 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         });
     }
 
-    //Ontology
-//    Thread t1 = new Thread(new Runnable() {
-//        @Override
-//        public void run() {
-//            for (int i = 0; i < 10000; i++) {
-//                LMLog.info("THREAD", "Counting " + i + " in Thread A");
-//            }
-//        }
-//    });
 
-    public void run() throws Exception {
+//    Thread t1 = new Thread(){
+//
+//
+//    };
+    //Ontology
+    public void loadOntology() throws Exception {
         OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
-        o = oom.loadOntologyFromOntologyDocument(this.getAssets().open("Ontology_v1.0.4.owl"));
+        InputStream y = this.getAssets().open("Ontology_v1.0.4.owl");
+        o = oom.loadOntologyFromOntologyDocument(y);
         df = oom.getOWLDataFactory();
         Set<OWLClass> classes = o.getClassesInSignature(false);
-        for (OWLClass owlClass:classes){
-            String label = "";
-            for (OWLAnnotation anno:owlClass.getAnnotations(o,df.getRDFSLabel())){
-                if (anno.getValue() instanceof OWLLiteral) {
-                    label = ((OWLLiteral) anno.getValue()).getLiteral();
-                }
+        OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
+        ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+        OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+        OWLReasoner reasoner = reasonerFactory.createReasoner(o, config);
+        reasoner.precomputeInferences();
+        OWLClass emergencies = null;
+        for (OWLClass owlClass : classes) {
+            String z = owlClass.getIRI().toString();
+            z = z.substring(z.lastIndexOf("#") + 1);
+            if (z.equals("EmergencyProcedures")) {
+                emergencies = owlClass;
+                break;
             }
-            if (label.equals(""))
-                emergencyMap.put(owlClass.toString(),owlClass);
-            else
-                emergencyMap.put(label,owlClass);
         }
+        if (emergencies != null)
+            for (OWLClass subClass : reasoner.getSubClasses(emergencies,true).getFlattened()) {
+                String label = subClass.getIRI().getFragment();
+//                if (label.indexOf("Emergency")==0) {
+////                    label = label.substring(label.lastIndexOf("Emergency") + 9);
+////                }
+                emergencyMap.put(label,subClass);
+            }
+        OWLClass emergenciesx = null;
+        for (OWLClass owlClass : classes) {
+            String z = owlClass.getIRI().toString();
+            z = z.substring(z.lastIndexOf("#") + 1);
+            if (z.equals("NFPAHazardIntensity")) {
+                emergenciesx = owlClass;
+                break;
+            }
+        }
+        if (emergenciesx != null)
+            for (OWLClass subClass : reasoner.getSubClasses(emergenciesx,true).getFlattened()) {
+//                for (OWLClass superClass : reasoner.getSuperClasses(subClass,true).getFlattened()) {
+//                    String trialLabel = superClass.getIRI().getFragment();
+//                    if (trialLabel.equals("NFPAColorRepresentation")) {
+//                        String label = subClass.getIRI().getFragment();
+//                        emergencyMap.remove(label);
+//                    } else {
+                        String label = subClass.getIRI().getFragment();
+                        emergencyMap.put(label, subClass);
+//                    }
+//                }
+            }
+
+
         OWLClass chemicals = null;
         for (OWLClass owlClass : classes) {
             String x = owlClass.getIRI().toString();
@@ -195,23 +236,13 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     break;
                 }
                 map.put(label, indiv);
-//                for (OWLIndividual similar : indiv.getSameIndividuals(o)) {
-//                String same = indiv.toStringID();
-//                Set<OWLDataProperty> odp = indiv.getDataPropertiesInSignature();
-//                for (OWLDataProperty odp : indiv.getDataPropertyValues(odp,o)) {
-//                    same = indiv.getSameIndividuals(o).toString();
-//                    same = same.substring(1, same.lastIndexOf("\""));
-//                    break;
-//                }
-//                repeatMap.put(same, indiv);
             }
-//            }
     }
+
 
     private void changeContent1() {
         typed = editText.getText().toString();
         ArrayList<String> temp = new ArrayList<>(emergencyMap.keySet());
-//        List<String> temp = temp1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             temp.sort(new Comparator<String>() {
                 @Override
@@ -232,14 +263,14 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         }
         ArrayAdapter<String> aao = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,android.R.id.text1,current);
         listView.setAdapter(aao);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(WhereIsYourEmergency.this, TryActivity.class);
-//                intent.putExtra("EmergencyName", listView.getItemAtPosition(position).toString());
-//                startActivity(intent);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(WhereIsYourEmergency.this, SecondActivity.class);
+                intent.putExtra("EmergencyName", listView.getItemAtPosition(position).toString());
+                startActivity(intent);
+            }
+        });
     }
 
     private void changeContent2() {
@@ -274,6 +305,8 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             }
         });
     }
+
+
 
     public void rate(View view){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/q64HES"));
