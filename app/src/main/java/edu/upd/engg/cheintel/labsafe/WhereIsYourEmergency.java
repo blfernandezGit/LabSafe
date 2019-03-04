@@ -88,7 +88,24 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             editText.setVisibility(View.VISIBLE);
             listView.setVisibility(View.VISIBLE);
             state = "1";
+            typed = "";
+            listView.setTextFilterEnabled(true);
             changeContent1();
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    changeContent1();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         }
     }
 
