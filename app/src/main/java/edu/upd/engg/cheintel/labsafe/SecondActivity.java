@@ -114,7 +114,7 @@ public class SecondActivity extends AppCompatActivity {
     }
     private void loadOntology() throws Exception {
         OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
-        o = oom.loadOntologyFromOntologyDocument(this.getAssets().open("Ontology_v1.0.4.owl"));
+        o = oom.loadOntologyFromOntologyDocument(this.getAssets().open("OntologySplit1_v1.0.5.owl"));
         df = oom.getOWLDataFactory();
         Set<OWLClass> classes = o.getClassesInSignature(false);
         OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
@@ -127,15 +127,15 @@ public class SecondActivity extends AppCompatActivity {
             String x = owlClass.getIRI().toString();
             x = x.substring(x.lastIndexOf("#") + 1);
             String emergency = getIntent().getStringExtra("EmergencyName");
-            if (x.equals(emergency)) {
+            if (x.equals("ProductName")) {
                 chemicals = owlClass;
                 break;
             }
         }
         if (chemicals != null)
             for (OWLNamedIndividual instances : reasoner.getInstances(chemicals,false).getFlattened()) {
-                String label = instances.getIRI().getFragment();
-//                String label = instances.getReferencingAxioms(o).toString();
+//                String label = instances.getIRI().getFragment();
+                String label = instances.getObjectPropertyValues(o).toString();
                 map.put(label,instances);
             }
     }
