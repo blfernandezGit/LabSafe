@@ -47,8 +47,8 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     OWLOntology o;
     OWLDataFactory df;
     HashMap<String, OWLIndividual> map;
-    HashMap<String,OWLClass> emergencyMap;
-//    HashMap<String, OWLIndividual> repeatMap;
+    HashMap<String, OWLClass> emergencyMap;
+    //    HashMap<String, OWLIndividual> repeatMap;
     ImageView imageView1;
     Button button1;
     Button button2;
@@ -64,7 +64,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         if (state.equals("0")) {
             super.onBackPressed();
         }
-        if ((state.equals("1"))||(state.equals("2"))) {
+        if ((state.equals("1")) || (state.equals("2"))) {
             imageView1.setVisibility(View.VISIBLE);
             button1.setVisibility(View.VISIBLE);
             button2.setVisibility(View.VISIBLE);
@@ -74,6 +74,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             state = "0";
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,14 +93,26 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         listView.setVisibility(View.GONE);
         map = new HashMap<>();
         try {
-            loadOntology();
-        } catch (Exception e) {
+            InputStream y = this.getAssets().open("OntologySplit1_v1.0.5.owl");
+            MyThread t1 = new MyThread(y);
+            t1.start();
+            InputStream z = this.getAssets().open("OntologySplit2_v1.0.1.owl");
+            MyThread t2 = new MyThread(z);
+            t2.start();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         emergencyMap = new HashMap<>();
         try {
-            loadOntology();
-        } catch (Exception e) {
+            InputStream y = this.getAssets().open("OntologySplit1_v1.0.5.owl");
+            MyThread t1 = new MyThread(y);
+            t1.start();
+            InputStream z = this.getAssets().open("OntologySplit2_v1.0.1.owl");
+            MyThread t2 = new MyThread(z);
+            t2.start();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         button1.setOnClickListener(new View.OnClickListener() {
@@ -119,10 +132,12 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     }
+
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         changeContent1();
                     }
+
                     @Override
                     public void afterTextChanged(Editable s) {
 
@@ -146,6 +161,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     }
+
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         changeContent2();
@@ -160,84 +176,79 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     }
 
 
-//    Thread t1 = new Thread(){
-//
-//
-//    };
-    //Ontology
-    public void loadOntology() throws Exception {
-        OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
-        InputStream y = this.getAssets().open("Ontology_v1.0.4.owl");
-        o = oom.loadOntologyFromOntologyDocument(y);
-        df = oom.getOWLDataFactory();
-        Set<OWLClass> classes = o.getClassesInSignature(false);
-        OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-        ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
-        OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
-        OWLReasoner reasoner = reasonerFactory.createReasoner(o, config);
-        reasoner.precomputeInferences();
-        OWLClass emergencies = null;
-        for (OWLClass owlClass : classes) {
-            String z = owlClass.getIRI().toString();
-            z = z.substring(z.lastIndexOf("#") + 1);
-            if (z.equals("EmergencyProcedures")) {
-                emergencies = owlClass;
-                break;
-            }
+    class MyThread extends Thread{
+        OWLOntology o;
+        InputStream y;
+        @Override
+        public void run() {
+            OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
+         try{
+            o = oom.loadOntologyFromOntologyDocument(y);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (emergencies != null)
-            for (OWLClass subClass : reasoner.getSubClasses(emergencies,true).getFlattened()) {
-                String label = subClass.getIRI().getFragment();
-//                if (label.indexOf("Emergency")==0) {
-////                    label = label.substring(label.lastIndexOf("Emergency") + 9);
-////                }
-                emergencyMap.put(label,subClass);
-            }
-        OWLClass emergenciesx = null;
-        for (OWLClass owlClass : classes) {
-            String z = owlClass.getIRI().toString();
-            z = z.substring(z.lastIndexOf("#") + 1);
-            if (z.equals("NFPAHazardIntensity")) {
-                emergenciesx = owlClass;
-                break;
-            }
-        }
-        if (emergenciesx != null)
-            for (OWLClass subClass : reasoner.getSubClasses(emergenciesx,true).getFlattened()) {
-//                for (OWLClass superClass : reasoner.getSuperClasses(subClass,true).getFlattened()) {
-//                    String trialLabel = superClass.getIRI().getFragment();
-//                    if (trialLabel.equals("NFPAColorRepresentation")) {
-//                        String label = subClass.getIRI().getFragment();
-//                        emergencyMap.remove(label);
-//                    } else {
-                        String label = subClass.getIRI().getFragment();
-                        emergencyMap.put(label, subClass);
-//                    }
-//                }
-            }
-
-
-        OWLClass chemicals = null;
-        for (OWLClass owlClass : classes) {
-            String x = owlClass.getIRI().toString();
-            x = x.substring(x.lastIndexOf("#") + 1);
-            if (x.equals("ProductName")) {
-                chemicals = owlClass;
-                break;
-            }
-        }
-        if (chemicals != null)
-            for (OWLIndividual indiv : chemicals.getIndividuals(o)) {
-                OWLEntity entity = (OWLEntity) indiv;
-                String label = indiv.toStringID();
-                for (OWLAnnotation anno : entity.getAnnotations(o)) {
-                    label = anno.getValue().toString();
-                    label = label.substring(1, label.lastIndexOf("\""));
+            df = oom.getOWLDataFactory();
+            Set<OWLClass> classes = o.getClassesInSignature(false);
+            OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
+            ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+            OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+            OWLReasoner reasoner = reasonerFactory.createReasoner(o, config);
+            reasoner.precomputeInferences();
+            OWLClass emergencies = null;
+            for (OWLClass owlClass : classes) {
+                String z = owlClass.getIRI().toString();
+                z = z.substring(z.lastIndexOf("#") + 1);
+                if (z.equals("EmergencyProcedures")) {
+                    emergencies = owlClass;
                     break;
                 }
-                map.put(label, indiv);
             }
+            if (emergencies != null)
+                for (OWLClass subClass : reasoner.getSubClasses(emergencies, true).getFlattened()) {
+                    String label = subClass.getIRI().getFragment();
+                    emergencyMap.put(label, subClass);
+                }
+            OWLClass emergenciesx = null;
+            for (OWLClass owlClass : classes) {
+                String z = owlClass.getIRI().toString();
+                z = z.substring(z.lastIndexOf("#") + 1);
+                if (z.equals("NFPAHazardIntensity")) {
+                    emergenciesx = owlClass;
+                    break;
+                }
+            }
+            if (emergenciesx != null)
+                for (OWLClass subClass : reasoner.getSubClasses(emergenciesx, true).getFlattened()) {
+                    String label = subClass.getIRI().getFragment();
+                    emergencyMap.put(label, subClass);
+                }
+            OWLClass chemicals = null;
+            for (OWLClass owlClass : classes) {
+                String x = owlClass.getIRI().toString();
+                x = x.substring(x.lastIndexOf("#") + 1);
+                if (x.equals("ProductName")) {
+                    chemicals = owlClass;
+                    break;
+                }
+            }
+            if (chemicals != null)
+                for (OWLIndividual indiv : chemicals.getIndividuals(o)) {
+                    OWLEntity entity = (OWLEntity) indiv;
+                    String label = indiv.toStringID();
+                    for (OWLAnnotation anno : entity.getAnnotations(o)) {
+                        label = anno.getValue().toString();
+                        label = label.substring(1, label.lastIndexOf("\""));
+                        break;
+                    }
+                    map.put(label, indiv);
+                }
+        }
+        public MyThread (InputStream y) {
+            this.y=y;
+        }
     }
+
+
 
 
     private void changeContent1() {
@@ -256,12 +267,12 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             String[] split = str.split("#");
             String toAdd = str;
             if (split.length > 1)
-                toAdd = split[1].substring(0,split[1].lastIndexOf(">"));
+                toAdd = split[1].substring(0, split[1].lastIndexOf(">"));
             if (!typed.equals("") && !toAdd.toLowerCase().startsWith(typed.toLowerCase()))
                 continue;
             current.add(toAdd);
         }
-        ArrayAdapter<String> aao = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,android.R.id.text1,current);
+        ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
         listView.setAdapter(aao);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -307,8 +318,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     }
 
 
-
-    public void rate(View view){
+    public void rate(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/q64HES"));
         startActivity(browserIntent);
     }
