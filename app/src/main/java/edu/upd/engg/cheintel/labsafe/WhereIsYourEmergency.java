@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -45,18 +46,22 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 
 public class WhereIsYourEmergency extends AppCompatActivity {
     OWLOntology o;
     OWLDataFactory df;
     HashMap<String, OWLIndividual> chemicalMap;
     HashMap<String, OWLClass> emergencyMap;
-    HashMap<String, OWLIndividual> emergencyChemicalMap;
+    HashMap<String, OWLNamedIndividual> emergencyChemicalMap;
     ImageView imageView1;
+    ImageView loading;
     Button button1;
     Button button2;
     Button button3;
@@ -64,48 +69,22 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     ListView listView;
     List<String> current;
     String typed;
-    String state;
+    Integer state;
+    MyThread t1;
+    MyThread2 t2;
 
     @Override
     public void onBackPressed() {
-        if (state.equals("0")) {
+        if (state==0) {
             super.onBackPressed();
         }
-        if ((state.equals("1")) || (state.equals("2"))) {
-            imageView1.setVisibility(View.VISIBLE);
-            button1.setVisibility(View.VISIBLE);
-            button2.setVisibility(View.VISIBLE);
-            button3.setVisibility(View.VISIBLE);
-            editText.setVisibility(View.GONE);
-            listView.setVisibility(View.GONE);
-            state = "0";
+        if ((state==1) || (state==2)) {
+            state = 0;
+            changeView();
         }
-        if ((state.equals("3"))){
-            imageView1.setVisibility(View.GONE);
-            button1.setVisibility(View.GONE);
-            button2.setVisibility(View.GONE);
-            button3.setVisibility(View.GONE);
-            editText.setVisibility(View.VISIBLE);
-            listView.setVisibility(View.VISIBLE);
-            state = "1";
-            typed = "";
-            listView.setTextFilterEnabled(true);
-            changeContent1();
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    changeContent1();
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
+        if ((state==3)){
+            state = 1;
+            changeView();
         }
     }
 
@@ -113,29 +92,26 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_where_is_your_emergency);
-        state = "0";
         imageView1 = findViewById(R.id.imageView1);
+        loading = findViewById(R.id.loading);
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
         editText = findViewById(R.id.editText);
         listView = findViewById(R.id.listView);
-        button1.setVisibility(View.VISIBLE);
-        button2.setVisibility(View.VISIBLE);
-        button3.setVisibility(View.VISIBLE);
-        editText.setVisibility(View.GONE);
-        listView.setVisibility(View.GONE);
+        state = 0;
+        changeView();
         chemicalMap = new HashMap<>();
         emergencyMap = new HashMap<>();
         emergencyChemicalMap = new HashMap<>();
-        ExecutorService pool = Executors.newFixedThreadPool(1);
+        ExecutorService pool = Executors.newFixedThreadPool(3);
         try {
             InputStream y = this.getAssets().open("OntologySplit1_v1.0.5.owl");
-            MyThread t1 = new MyThread(y);
-            pool.execute(t1);
+            t1 = new MyThread(y);
+            t1.start();
             InputStream z = this.getAssets().open("OntologySplit2_v1.0.1.owl");
-            MyThread t2 = new MyThread(z);
-            pool.execute(t2);
+            t2 = new MyThread2(z);
+            t2.start();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -143,75 +119,37 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                state = "1";
-                imageView1.setVisibility(View.GONE);
-                button1.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
-                button3.setVisibility(View.GONE);
-                editText.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.VISIBLE);
-                typed = "";
-                listView.setTextFilterEnabled(true);
-                changeContent1();
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        changeContent1();
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                });
+                while (t1.isAlive()) {
+                    loading.setVisibility(View.VISIBLE);
+                }
+                state = 1;
+                changeView();
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                state = "2";
-                imageView1.setVisibility(View.GONE);
-                button1.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
-                button3.setVisibility(View.GONE);
-                editText.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.VISIBLE);
-                listView.setTextFilterEnabled(true);
-                changeContent2();
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        changeContent2();
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                });
+                while (t2.isAlive()) {
+                    loading.setVisibility(View.VISIBLE);
+                }
+                state = 2;
+                changeView();
             }
         });
     }
 
 
     class MyThread extends Thread{
-        OWLOntology o;
         InputStream y;
         @Override
         public void run() {
             OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
-         try{
-            o = oom.loadOntologyFromOntologyDocument(y);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try{
+                o = oom.loadOntologyFromOntologyDocument(y);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             df = oom.getOWLDataFactory();
             Set<OWLClass> classes = o.getClassesInSignature(false);
             OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
@@ -253,27 +191,6 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     String label = subClass.getIRI().getFragment();
                     emergencyMap.put(label, subClass);
                 }
-            OWLClass chemicals = null;
-            for (OWLClass owlClass : classes) {
-                String x = owlClass.getIRI().toString();
-                x = x.substring(x.lastIndexOf("#") + 1);
-                if (x.equals("ProductName")) {
-                    chemicals = owlClass;
-                    break;
-                }
-            }
-            if (chemicals != null)
-                for (OWLIndividual indiv : chemicals.getIndividuals(o)) {
-                    OWLEntity entity = (OWLEntity) indiv;
-                    String label = indiv.toStringID();
-                    for (OWLAnnotation annotation : entity.getAnnotations(o, df.getRDFSLabel())) {
-                        if (annotation.getValue() instanceof OWLLiteral) {
-                            OWLLiteral val = (OWLLiteral) annotation.getValue();
-                            label=val.getLiteral();
-                        }
-                    }
-                    chemicalMap.put(label, indiv);
-                }
             OWLClass emergencyChemicals = null;
             for (OWLClass owlClass : classes) {
                 String x = owlClass.getIRI().toString();
@@ -284,6 +201,17 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                 }
             }
             if (emergencyChemicals != null)
+//                for (OWLNamedIndividual instances : reasoner.getInstances(emergencyChemicals,false).getFlattened()) {
+//                    OWLObjectProperty hasFlammabilityLevel = df.getOWLObjectProperty(IRI.create("#hasFlammabilityLevel"));
+//                    OWLClassExpression flammabilityOfI = df.getOWLObjectHasValue(hasFlammabilityLevel, instances);
+//                    for (OWLNamedIndividual flammability : reasoner.getInstances(flammabilityOfI, false).getFlattened()) {
+////                        String label = hasFlammabilityLevel.getIndividualsInSignature().toString();
+////                    String label = i.getReferencingAxioms(o).toString();
+//                        String label = flammability.getIRI().getFragment();
+//                        emergencyChemicalMap.put(label, instances);
+//                    }
+//                }
+
                 for (OWLNamedIndividual instances : reasoner.getInstances(emergencyChemicals,false).getFlattened()) {
                     String label = instances.getIRI().getFragment();
                     for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
@@ -292,26 +220,58 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                             label=val.getLiteral();
                         }
                     }
-//                    HashSet<OWLObjectProperty> relatedObjectProperties = new HashSet<>();
-//                    HashSet<OWLObjectPropertyExpression> subProperties = new HashSet<>();
-//                    Set<OWLClass> types = reasoner.getTypes(instances, true).getFlattened();
-//                    for (OWLObjectPropertyExpression property : subProperties) {
-//                        Set<OWLClassExpression> domains = property.getDomains(o);
-//                        for (OWLClassExpression domain : domains) {
-//                            if (types.contains(domain.asOWLClass())) {
-//                                relatedObjectProperties.add(property.asOWLObjectProperty());
-//                            }
-//                        }
-//                    }
-//                    String label = relatedObjectProperties.toString();
-//                    String label = instances.getObjectPropertyValues(o).toString();
                     emergencyChemicalMap.put(label,instances);
                 }
-        }
-        public MyThread (InputStream y) {
-            this.y=y;
-        }
     }
+    private MyThread (InputStream y) {
+        this.y=y;
+    }
+}
+
+class MyThread2 extends Thread{
+    InputStream z;
+    @Override
+    public void run() {
+        OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
+        try{
+            o = oom.loadOntologyFromOntologyDocument(z);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        df = oom.getOWLDataFactory();
+        Set<OWLClass> classes = o.getClassesInSignature(false);
+        OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
+        ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+        OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+        OWLReasoner reasoner = reasonerFactory.createReasoner(o, config);
+        reasoner.precomputeInferences();
+        OWLClass chemicals = null;
+        for (OWLClass owlClass : classes) {
+            String x = owlClass.getIRI().toString();
+            x = x.substring(x.lastIndexOf("#") + 1);
+            if (x.equals("ProductName")) {
+                chemicals = owlClass;
+                break;
+            }
+        }
+        if (chemicals != null)
+            for (OWLIndividual indiv : chemicals.getIndividuals(o)) {
+                OWLEntity entity = (OWLEntity) indiv;
+                String label = indiv.toStringID();
+                for (OWLAnnotation annotation : entity.getAnnotations(o, df.getRDFSLabel())) {
+                    if (annotation.getValue() instanceof OWLLiteral) {
+                        OWLLiteral val = (OWLLiteral) annotation.getValue();
+                        label=val.getLiteral();
+                    }
+                }
+                chemicalMap.put(label, indiv);
+            }
+
+    }
+    private MyThread2 (InputStream z) {
+        this.z=z;
+    }
+}
 
     private void changeContent1() {
         typed = editText.getText().toString();
@@ -339,31 +299,8 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                state = "3";
-                imageView1.setVisibility(View.GONE);
-                button1.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
-                button3.setVisibility(View.GONE);
-                editText.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.VISIBLE);
-                typed = "";
-                listView.setTextFilterEnabled(true);
-                changeContent3();
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        changeContent3();
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                });
+                state = 3;
+                changeView();
             }
         });
     }
@@ -434,11 +371,72 @@ public class WhereIsYourEmergency extends AppCompatActivity {
 //        });
     }
 
+    private void changeView() {
+        if ((state!=0)&&(state!=-1)) {
+            imageView1.setVisibility(View.GONE);
+            loading.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+            button3.setVisibility(View.GONE);
+            editText.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.VISIBLE);
+            typed = "";
+            listView.setTextFilterEnabled(true);
+            if (state==1) {
+                changeContent1();
+            }
+            if (state==2) {
+                changeContent2();
+            }
+            if (state==3) {
+                changeContent3();
+            }
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (state==1) {
+                        changeContent1();
+                    }
+                    if (state==2) {
+                        changeContent2();
+                    }
+                    if (state==3) {
+                        changeContent3();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+        }
+        if (state==0) {
+            imageView1.setVisibility(View.VISIBLE);
+            loading.setVisibility(View.GONE);
+            button1.setVisibility(View.VISIBLE);
+            button2.setVisibility(View.VISIBLE);
+            button3.setVisibility(View.VISIBLE);
+            editText.setVisibility(View.GONE);
+            listView.setVisibility(View.GONE);
+        }
+        if (state==-1){
+            imageView1.setVisibility(View.GONE);
+            loading.setVisibility(View.VISIBLE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+            button3.setVisibility(View.GONE);
+            editText.setVisibility(View.GONE);
+            listView.setVisibility(View.GONE);
+        }
+    }
 
     public void rate(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/q64HES"));
         startActivity(browserIntent);
     }
-
-
 }
