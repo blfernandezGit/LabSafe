@@ -23,33 +23,45 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.PrefixManager;
 import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
+import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -59,7 +71,11 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     OWLDataFactory df;
     HashMap<String, OWLIndividual> chemicalMap;
     HashMap<String, OWLClass> emergencyMap;
-    HashMap<String, OWLNamedIndividual> emergencyChemicalMap;
+    HashMap<String, Integer> flammabilityMap;
+    HashMap<String, Integer> healthMap;
+    HashMap<String, Integer> instabilityMap;
+    HashMap<String, Integer> emergencyChemicalsMap;
+    HashMap<String, Integer> eyeMap;
     ImageView imageView1;
     ImageView loading;
     Button button1;
@@ -69,6 +85,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     ListView listView;
     List<String> current;
     String typed;
+    String selected;
     Integer state;
     MyThread t1;
     MyThread2 t2;
@@ -99,14 +116,18 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         button3 = findViewById(R.id.button3);
         editText = findViewById(R.id.editText);
         listView = findViewById(R.id.listView);
+        selected = "";
         state = 0;
         changeView();
         chemicalMap = new HashMap<>();
         emergencyMap = new HashMap<>();
-        emergencyChemicalMap = new HashMap<>();
-        ExecutorService pool = Executors.newFixedThreadPool(3);
+        flammabilityMap = new HashMap<>();
+        healthMap = new HashMap<>();
+        instabilityMap = new HashMap<>();
+        eyeMap = new HashMap<>();
+//        ExecutorService pool = Executors.newFixedThreadPool(3);
         try {
-            InputStream y = this.getAssets().open("OntologySplit1_v1.0.5.owl");
+            InputStream y = this.getAssets().open("OntologySplit1_v1.0.7.owl");
             t1 = new MyThread(y);
             t1.start();
             InputStream z = this.getAssets().open("OntologySplit2_v1.0.1.owl");
@@ -116,25 +137,19 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         catch (Exception e) {
             e.printStackTrace();
         }
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                while (t1.isAlive()) {
-                    loading.setVisibility(View.VISIBLE);
-                }
-                state = 1;
-                changeView();
+        button1.setOnClickListener(view -> {
+            while (t1.isAlive()) {
+                loading.setVisibility(View.VISIBLE);
             }
+            state = 1;
+            changeView();
         });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                while (t2.isAlive()) {
-                    loading.setVisibility(View.VISIBLE);
-                }
-                state = 2;
-                changeView();
+        button2.setOnClickListener(view -> {
+            while (t2.isAlive()) {
+                loading.setVisibility(View.VISIBLE);
             }
+            state = 2;
+            changeView();
         });
     }
 
@@ -151,6 +166,8 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             }
 
             df = oom.getOWLDataFactory();
+            String base = "http://www.semanticweb.org/thomasm.lutao/azescobar/ontologies/2017/9/MSDSOntologySplit1-nopropsvers";
+            PrefixManager pm = new DefaultPrefixManager(base);
             Set<OWLClass> classes = o.getClassesInSignature(false);
             OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
             ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
@@ -166,17 +183,18 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     break;
                 }
             }
-            if (emergencies != null)
+            if (emergencies != null) {
                 for (OWLClass subClass : reasoner.getSubClasses(emergencies, true).getFlattened()) {
                     String label = subClass.getIRI().getFragment();
                     for (OWLAnnotation annotation : subClass.getAnnotations(o, df.getRDFSLabel())) {
                         if (annotation.getValue() instanceof OWLLiteral) {
                             OWLLiteral val = (OWLLiteral) annotation.getValue();
-                            label=val.getLiteral();
+                            label = val.getLiteral();
                         }
                     }
                     emergencyMap.put(label, subClass);
                 }
+            }
             OWLClass emergenciesx = null;
             for (OWLClass owlClass : classes) {
                 String z = owlClass.getIRI().toString();
@@ -186,11 +204,12 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     break;
                 }
             }
-            if (emergenciesx != null)
+            if (emergenciesx != null) {
                 for (OWLClass subClass : reasoner.getSubClasses(emergenciesx, true).getFlattened()) {
                     String label = subClass.getIRI().getFragment();
                     emergencyMap.put(label, subClass);
                 }
+            }
             OWLClass emergencyChemicals = null;
             for (OWLClass owlClass : classes) {
                 String x = owlClass.getIRI().toString();
@@ -200,28 +219,74 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     break;
                 }
             }
-            if (emergencyChemicals != null)
-//                for (OWLNamedIndividual instances : reasoner.getInstances(emergencyChemicals,false).getFlattened()) {
-//                    OWLObjectProperty hasFlammabilityLevel = df.getOWLObjectProperty(IRI.create("#hasFlammabilityLevel"));
-//                    OWLClassExpression flammabilityOfI = df.getOWLObjectHasValue(hasFlammabilityLevel, instances);
-//                    for (OWLNamedIndividual flammability : reasoner.getInstances(flammabilityOfI, false).getFlattened()) {
-////                        String label = hasFlammabilityLevel.getIndividualsInSignature().toString();
-////                    String label = i.getReferencingAxioms(o).toString();
-//                        String label = flammability.getIRI().getFragment();
-//                        emergencyChemicalMap.put(label, instances);
-//                    }
-//                }
-
-                for (OWLNamedIndividual instances : reasoner.getInstances(emergencyChemicals,false).getFlattened()) {
-                    String label = instances.getIRI().getFragment();
-                    for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
-                        if (annotation.getValue() instanceof OWLLiteral) {
-                            OWLLiteral val = (OWLLiteral) annotation.getValue();
-                            label=val.getLiteral();
+            if (emergencyChemicals != null) {
+                for (OWLNamedIndividual instances : reasoner.getInstances(emergencyChemicals, false).getFlattened()) {
+                    OWLObjectProperty objectProperty = df.getOWLObjectProperty("#" + "hasHealthLevel", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                        OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasLevel", pm);
+                        for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String x = chemicalDataProperty.getLiteral();
+                            Integer chemicalLevel = Integer.parseInt(x);
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            healthMap.put(label, chemicalLevel);
                         }
                     }
-                    emergencyChemicalMap.put(label,instances);
+                    objectProperty = df.getOWLObjectProperty("#" + "hasFlammabilityLevel", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                        OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasLevel", pm);
+                        for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String x = chemicalDataProperty.getLiteral();
+                            Integer chemicalLevel = Integer.parseInt(x);
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            flammabilityMap.put(label, chemicalLevel);
+                        }
+                    }
+                    objectProperty = df.getOWLObjectProperty("#" + "hasInstabilityOrReactivityLevel", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                        OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasLevel", pm);
+                        for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String x = chemicalDataProperty.getLiteral();
+                            Integer chemicalLevel = Integer.parseInt(x);
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            instabilityMap.put(label, chemicalLevel);
+                        }
+                    }
+                    objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidEye", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                        OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
+                        for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String x = chemicalDataProperty.getLiteral();
+                            Integer chemicalLevel = Integer.parseInt(x);
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            eyeMap.put(label, chemicalLevel);
+                        }
+                    }
                 }
+            }
     }
     private MyThread (InputStream y) {
         this.y=y;
@@ -277,12 +342,7 @@ class MyThread2 extends Thread{
         typed = editText.getText().toString();
         ArrayList<String> temp = new ArrayList<>(emergencyMap.keySet());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            temp.sort(new Comparator<String>() {
-                @Override
-                public int compare(String o1, String o2) {
-                    return o1.compareTo(o2);
-                }
-            });
+            temp.sort(String::compareTo);
         }
         current = new ArrayList<>();
         for (String str : temp) {
@@ -296,12 +356,10 @@ class MyThread2 extends Thread{
         }
         ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
         listView.setAdapter(aao);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                state = 3;
-                changeView();
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            state = 3;
+            selected = listView.getItemAtPosition(position).toString();
+            changeView();
         });
     }
 
@@ -309,12 +367,7 @@ class MyThread2 extends Thread{
         typed = editText.getText().toString();
         ArrayList<String> temp = new ArrayList<>(chemicalMap.keySet());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            temp.sort(new Comparator<String>() {
-                @Override
-                public int compare(String o1, String o2) {
-                    return o1.compareTo(o2);
-                }
-            });
+            temp.sort(String::compareTo);
         }
         current = new ArrayList<>();
         for (String str : temp) {
@@ -328,27 +381,37 @@ class MyThread2 extends Thread{
         }
         ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
         listView.setAdapter(aao);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
                 Intent intent = new Intent(WhereIsYourEmergency.this, ThirdActivity.class);
                 intent.putExtra("ChemicalName", listView.getItemAtPosition(position).toString());
                 startActivity(intent);
-            }
         });
     }
 
     private void changeContent3() {
         typed = editText.getText().toString();
-        ArrayList<String> temp = new ArrayList<>(emergencyChemicalMap.keySet());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            temp.sort(new Comparator<String>() {
-                @Override
-                public int compare(String o1, String o2) {
-                    return o1.compareTo(o2);
-                }
-            });
+        emergencyChemicalsMap = new HashMap<>();
+        if (selected.equals("Flammability")){
+            emergencyChemicalsMap = flammabilityMap;
         }
+        if (selected.equals("Health")){
+            emergencyChemicalsMap = healthMap;
+        }
+        if (selected.equals("InstabilityOrReactivity")){
+            emergencyChemicalsMap = instabilityMap;
+        }
+        if (selected.equals("Eye Contact")){
+            emergencyChemicalsMap = eyeMap;
+        }
+        Map<String, Integer> tempSortedMap = new TreeMap<>(emergencyChemicalsMap);
+        HashMap<String, Integer> finalSortedMap = new LinkedHashMap<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tempSortedMap.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .forEachOrdered(x -> finalSortedMap.put(x.getKey(), x.getValue()));
+        }
+        ArrayList<String> temp = new ArrayList<>(finalSortedMap.keySet());
         current = new ArrayList<>();
         for (String str : temp) {
             String[] split = str.split("#");
