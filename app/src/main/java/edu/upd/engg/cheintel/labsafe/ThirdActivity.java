@@ -96,7 +96,7 @@ public class ThirdActivity extends AppCompatActivity {
             } else if (mToolbar.getTitle().toString().equalsIgnoreCase("Boric Acid")) {
                 PDFView pdfView = findViewById(R.id.pdfView);
                 pdfView.fromAsset("Boric acid.pdf").load();
-            } else if (mToolbar.getTitle().toString().equalsIgnoreCase("Boron Trifluoride (10-15% in MeOH")) {
+            } else if (mToolbar.getTitle().toString().equalsIgnoreCase("Boron Trifluouride (10-15% in MeOH)")) {
                 PDFView pdfView = findViewById(R.id.pdfView);
                 pdfView.fromAsset("Boron Trifluoride 10-15_.pdf").load();
             } else if (mToolbar.getTitle().toString().equalsIgnoreCase("Buffer Solution (pH 4.00)")) {
@@ -275,7 +275,7 @@ public class ThirdActivity extends AppCompatActivity {
                 pdfView.fromAsset("Sodium thiosulfate pentahydrate.pdf").load();
             } else if (mToolbar.getTitle().toString().equalsIgnoreCase("Sulfuric Acid")) {
                 PDFView pdfView = findViewById(R.id.pdfView);
-                pdfView.fromAsset("SulfuricAcid.pdf").load();
+                pdfView.fromAsset("SulfuricAcidPure.pdf").load();
             } else if (mToolbar.getTitle().toString().equalsIgnoreCase("Tetrabutylammonium Chloride Hydrate")) {
                 PDFView pdfView = findViewById(R.id.pdfView);
                 pdfView.fromAsset("tetrabutylammonium chloride.pdf").load();

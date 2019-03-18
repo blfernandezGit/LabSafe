@@ -76,6 +76,13 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     HashMap<String, Integer> instabilityMap;
     HashMap<String, Integer> emergencyChemicalsMap;
     HashMap<String, Integer> eyeMap;
+    HashMap<String, Integer> eyeMap2;
+    HashMap<String, Integer> fireMap;
+    HashMap<String, Integer> fireMap2;
+    HashMap<String, Integer> inhalationMap;
+    HashMap<String, Integer> inhalationMap2;
+    HashMap<String, Integer> skinMap;
+    HashMap<String, Integer> skinMap2;
     ImageView imageView1;
     ImageView loading;
     Button button1;
@@ -103,6 +110,10 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             state = 1;
             changeView();
         }
+        if ((state==4)){
+            state = 3;
+            changeView();
+        }
     }
 
     @Override
@@ -125,9 +136,16 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         healthMap = new HashMap<>();
         instabilityMap = new HashMap<>();
         eyeMap = new HashMap<>();
+        eyeMap2 = new HashMap<>();
+        fireMap = new HashMap<>();
+        fireMap2 = new HashMap<>();
+        inhalationMap = new HashMap<>();
+        inhalationMap2 = new HashMap<>();
+        skinMap = new HashMap<>();
+        skinMap2 = new HashMap<>();
 //        ExecutorService pool = Executors.newFixedThreadPool(3);
         try {
-            InputStream y = this.getAssets().open("OntologySplit1_v1.0.7.owl");
+            InputStream y = this.getAssets().open("OntologySplit1_v1.0.8.owl");
             t1 = new MyThread(y);
             t1.start();
             InputStream z = this.getAssets().open("OntologySplit2_v1.0.1.owl");
@@ -273,6 +291,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                     for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
                         OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
                         for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String label2 = chemicalObjectProperty.getIRI().getFragment();
                             String x = chemicalDataProperty.getLiteral();
                             Integer chemicalLevel = Integer.parseInt(x);
                             String label = instances.toStringID();
@@ -282,7 +301,104 @@ public class WhereIsYourEmergency extends AppCompatActivity {
                                     label=val.getLiteral();
                                 }
                             }
+                            for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label2=val.getLiteral();
+                                }
+                            }
                             eyeMap.put(label, chemicalLevel);
+                            eyeMap2.put(label2, chemicalLevel);
+                        }
+                    }
+                    objectProperty = df.getOWLObjectProperty("#" + "hasLargeFireFighting", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                            String label2 = chemicalObjectProperty.getIRI().getFragment();
+                            Integer chemicalLevel = 3;
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label2=val.getLiteral();
+                                }
+                            }
+                            chemicalLevel++;
+                            fireMap.put(label, chemicalLevel);
+                            fireMap2.put(label2, chemicalLevel);
+                    }
+                    objectProperty = df.getOWLObjectProperty("#" + "hasSmallFireFighting", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                            String label2 = chemicalObjectProperty.getIRI().getFragment();
+                            Integer chemicalLevel = 0;
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label2=val.getLiteral();
+                                }
+                            }
+                            chemicalLevel++;
+                            fireMap.put(label, chemicalLevel);
+                            fireMap2.put(label2, chemicalLevel);
+                    }
+                    objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidSeriousInhalation", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                        OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
+                        for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String label2 = chemicalObjectProperty.getIRI().getFragment();
+                            String x = chemicalDataProperty.getLiteral();
+                            Integer chemicalLevel = Integer.parseInt(x);
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label2=val.getLiteral();
+                                }
+                            }
+                            inhalationMap.put(label, chemicalLevel);
+                            inhalationMap2.put(label2, chemicalLevel);
+                        }
+                    }
+                    objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidSeriousSkin", pm);
+                    for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(instances, objectProperty).getFlattened()) {
+                        OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
+                        for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                            String label2 = chemicalObjectProperty.getIRI().getFragment();
+                            String x = chemicalDataProperty.getLiteral();
+                            Integer chemicalLevel = Integer.parseInt(x);
+                            String label = instances.toStringID();
+                            for (OWLAnnotation annotation : instances.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label=val.getLiteral();
+                                }
+                            }
+                            for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                if (annotation.getValue() instanceof OWLLiteral) {
+                                    OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                    label2=val.getLiteral();
+                                }
+                            }
+                            skinMap.put(label, chemicalLevel);
+                            skinMap2.put(label2, chemicalLevel);
                         }
                     }
                 }
@@ -340,6 +456,18 @@ class MyThread2 extends Thread{
 
     private void changeContent1() {
         typed = editText.getText().toString();
+        emergencyMap.remove("Blue");
+        emergencyMap.remove("Contamination");
+        emergencyMap.remove("FirstAidEye");
+        emergencyMap.remove("Ignition");
+        emergencyMap.remove("Ingestion");
+        emergencyMap.remove("Red");
+        emergencyMap.remove("Yellow");
+        emergencyMap.remove("White");
+        emergencyMap.remove("Section006AccidentalReleaseMeasures");
+        emergencyMap.remove("Section010StabilityAndReactivity");
+        emergencyMap.remove("SpecialNotice");
+        emergencyMap.remove("Spill");
         ArrayList<String> temp = new ArrayList<>(emergencyMap.keySet());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             temp.sort(String::compareTo);
@@ -382,9 +510,9 @@ class MyThread2 extends Thread{
         ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
         listView.setAdapter(aao);
         listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-                Intent intent = new Intent(WhereIsYourEmergency.this, ThirdActivity.class);
-                intent.putExtra("ChemicalName", listView.getItemAtPosition(position).toString());
-                startActivity(intent);
+            Intent intent = new Intent(WhereIsYourEmergency.this, ThirdActivity.class);
+            intent.putExtra("ChemicalName", listView.getItemAtPosition(position).toString());
+            startActivity(intent);
         });
     }
 
@@ -402,6 +530,15 @@ class MyThread2 extends Thread{
         }
         if (selected.equals("Eye Contact")){
             emergencyChemicalsMap = eyeMap;
+        }
+        if (selected.equals("FireFighting")){
+            emergencyChemicalsMap = fireMap;
+        }
+        if (selected.equals("Inhalation")){
+            emergencyChemicalsMap = inhalationMap;
+        }
+        if (selected.equals("Skin Contact")){
+            emergencyChemicalsMap = skinMap;
         }
         Map<String, Integer> tempSortedMap = new TreeMap<>(emergencyChemicalsMap);
         HashMap<String, Integer> finalSortedMap = new LinkedHashMap<>();
@@ -424,13 +561,61 @@ class MyThread2 extends Thread{
         }
         ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
         listView.setAdapter(aao);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(WhereIsYourEmergency.this, ThirdActivity.class);
-//                intent.putExtra("ChemicalName", listView.getItemAtPosition(position).toString());
-//                startActivity(intent);
-//            }
+        if (selected.equals("Flammability")||selected.equals("Health")||selected.equals("InstabilityOrReactivity")){
+            listView.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+                Intent intent = new Intent(WhereIsYourEmergency.this, ThirdActivity.class);
+                intent.putExtra("ChemicalName", listView.getItemAtPosition(position).toString());
+                startActivity(intent);
+            });
+        }
+        else {
+            listView.setOnItemClickListener((parent, view, position, id) -> {
+                state = 4;
+                changeView();
+            });
+        }
+    }
+
+    private void changeContent4() {
+            typed = editText.getText().toString();
+            emergencyChemicalsMap = new HashMap<>();
+            if (selected.equals("Eye Contact")) {
+                emergencyChemicalsMap = eyeMap2;
+            }
+            if (selected.equals("FireFighting")) {
+                emergencyChemicalsMap = fireMap2;
+            }
+            if (selected.equals("Inhalation")) {
+                emergencyChemicalsMap = inhalationMap2;
+            }
+            if (selected.equals("Skin Contact")) {
+                emergencyChemicalsMap = skinMap2;
+            }
+            Map<String, Integer> tempSortedMap = new TreeMap<>(emergencyChemicalsMap);
+            HashMap<String, Integer> finalSortedMap = new LinkedHashMap<>();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                tempSortedMap.entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .forEachOrdered(x -> finalSortedMap.put(x.getKey(), x.getValue()));
+            }
+            ArrayList<String> temp = new ArrayList<>(finalSortedMap.keySet());
+            current = new ArrayList<>();
+            for (String str : temp) {
+                String[] split = str.split("#");
+                String toAdd = str;
+                if (split.length > 1)
+                    toAdd = split[1];
+                if (!typed.equals("") && !toAdd.toLowerCase().contains(typed.toLowerCase()))
+                    continue;
+                current.add(toAdd);
+            }
+            ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
+            listView.setAdapter(aao);
+//        listView.setOnItemClickListener((parent, view, position, id) -> {
+//            state = 4;
+//            selected = listView.getItemAtPosition(position).toString();
+//            changeView();
 //        });
     }
 
@@ -454,6 +639,9 @@ class MyThread2 extends Thread{
             if (state==3) {
                 changeContent3();
             }
+            if (state==4) {
+                changeContent4();
+            }
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -469,6 +657,9 @@ class MyThread2 extends Thread{
                     }
                     if (state==3) {
                         changeContent3();
+                    }
+                    if (state==4) {
+                        changeContent4();
                     }
                 }
 
