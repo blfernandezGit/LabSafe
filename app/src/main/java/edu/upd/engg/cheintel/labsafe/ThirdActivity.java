@@ -1,9 +1,11 @@
 package edu.upd.engg.cheintel.labsafe;
 
+    import android.content.Intent;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
     import android.support.v7.widget.Toolbar;
     import android.text.method.ScrollingMovementMethod;
+    import android.view.View;
     import android.widget.ImageView;
     import android.widget.TextView;
 
@@ -35,19 +37,6 @@ public class ThirdActivity extends AppCompatActivity {
             if (mToolbar.getTitle().toString().equalsIgnoreCase("Acetone")) {
                 PDFView pdfView = findViewById(R.id.pdfView);
                 pdfView.fromAsset("Acetone.pdf").load();
-//tols.setImageDrawable(ContextCompat.getDrawable(ThirdActivity.this,
-// R.drawable.acetonepic));
-// InputStream is = this.getResources().openRawResource(R.raw.acetone);
-// BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-// if (is != null) try {
-// while ((data = reader.readLine()) != null) {
-// sbuffer.append(data + "\n");
-// }
-// mols.setText(sbuffer);
-// is.close();
-// } catch (Exception e) {
-// e.printStackTrace();
-// }
             } else if (mToolbar.getTitle().toString().equalsIgnoreCase("3,5-Dinitrosalicylic Acid")) {
                 PDFView pdfView = findViewById(R.id.pdfView);
                 pdfView.fromAsset("3,5-dinitrosalicylic acid.pdf").load();
@@ -302,5 +291,10 @@ public class ThirdActivity extends AppCompatActivity {
                 pdfView.fromAsset("Zinc metal.pdf").load();
             }
         }
+    }
+
+    public void home (View view){
+        Intent intent = new Intent(ThirdActivity.this, WhereIsYourEmergency.class);
+        startActivity(intent);
     }
 }

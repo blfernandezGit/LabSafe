@@ -4,18 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/colorAccent"
     tools:context=".WhereIsYourEmergency">
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="255dp"
-        android:layout_height="94dp"
-        android:layout_marginTop="36dp"
-        app:layout_constraintHorizontal_bias="0.498"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar1"
+        android:background="@color/colorPrimary"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04"/>
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".145"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline1"
         android:contentDescription="@string/desc"
         android:src="@drawable/logo2"/>
     <ImageView
@@ -23,109 +46,203 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/desc"
-        android:src="@drawable/loading"/>
+        android:visibility="gone"
+        android:src="@drawable/logo2"/>
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:textCursorDrawable="@null"
+        android:textColor="@color/colorPrimaryDark"
         android:ems="10"
         android:inputType="textPersonName"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar1"
         android:hint="@string/hint"
-        android:importantForAutofill="no">
+        app:backgroundTint="@color/colorPrimaryDark">
         <requestFocus />
     </EditText>
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
-    <Button
+        app:layout_constraintTop_toBottomOf="@id/editText"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.26"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+    <ImageButton
         android:id="@+id/button1"
-        android:layout_width="290dp"
-        android:layout_height="130dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#ffc62828"
-        android:fontFamily="sans-serif-condensed"
-        android:text="WHAT IS YOUR EMERGENCY?"
-        android:textAlignment="center"
-        android:textColor="@android:color/background_light"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintHorizontal_bias="0.862"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".22"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView1"
-        tools:ignore="HardcodedText" />
-    <Button
+        app:layout_constraintRight_toLeftOf="@id/guideline3"
+        app:layout_constraintTop_toBottomOf="@id/guideline2"
+        android:background="@drawable/img_btn1"
+        tools:ignore="HardcodedText"
+        android:contentDescription="@string/desc"/>
+    <ImageButton
         android:id="@+id/button2"
-        android:layout_width="286dp"
-        android:layout_height="119dp"
-        android:layout_marginBottom="72dp"
-        android:background="#ff1565c0"
-        android:fontFamily="sans-serif-condensed"
-        android:text="CHEMICAL DATABASE"
-        android:textColor="@android:color/background_light"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.128"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button1"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".22"
+        app:layout_constraintLeft_toRightOf="@id/guideline3"
         app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="HardcodedText" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="70dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="216dp"
-        app:layout_constraintHorizontal_bias="0.048"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/desc"/>
-    <!--android:src="@drawable/hazardd"-->
-
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="88dp"
-        android:layout_height="79dp"
-        android:layout_marginTop="440dp"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/desc"/>
-    <!--android:src="@drawable/database"-->
-
-    <Button
+        app:layout_constraintTop_toBottomOf="@id/guideline2"
+        android:background="@drawable/img_btn2"
+        tools:ignore="HardcodedText"
+        android:contentDescription="@string/desc" />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4"/>
+    <ImageButton
         android:id="@+id/button3"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline4"
+        app:layout_constraintRight_toLeftOf="@id/guideline3"
+        android:background="@drawable/img_btn3"
+        android:onClick="rate"
+        android:contentDescription="@string/desc"/>
+    <ImageButton
+        android:id="@+id/button4"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline4"
+        app:layout_constraintLeft_toRightOf="@id/guideline3"
+        android:background="@drawable/img_btn4"
+        android:onClick="rate"
+        android:contentDescription="@string/desc"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.02"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.07"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"/>
+    <ImageButton
+        android:id="@+id/button5"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".05"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        app:layout_constraintRight_toLeftOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/guideline5"
+        app:layout_constraintLeft_toRightOf="@id/guideline7"
+        android:background="@drawable/img_btn5"
+        android:onClick="home"
+        android:contentDescription="@string/desc"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55"/>
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ff1565c0"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Rate Us!"
-        android:textColor="@android:color/background_light"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline3"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button2"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/button1"
+        app:layout_constraintBottom_toTopOf="@id/guideline9"
+        android:text="@string/label1"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="HardcodedText"
-        android:onClick="rate"/>
+        app:layout_constraintLeft_toRightOf="@id/guideline3"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/button2"
+        app:layout_constraintBottom_toTopOf="@id/guideline9"
+        android:text="@string/label2"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.88"/>
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@id/guideline3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/button3"
+        app:layout_constraintBottom_toTopOf="@id/guideline10"
+        android:text="@string/label3"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/guideline3"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/button4"
+        app:layout_constraintBottom_toTopOf="@id/guideline10"
+        android:text="@string/label4"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        />
 </android.support.constraint.ConstraintLayout>

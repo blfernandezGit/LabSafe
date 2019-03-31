@@ -4,4 +4,8 @@
     <string name="emergency">LabSafe Emergency List</string>
     <string name="hint">What is your emergency?</string>
     <string name="desc">Image</string>
+    <string name="label1">What is your emergency?</string>
+    <string name="label2">Chemical Database</string>
+    <string name="label3">Rate us</string>
+    <string name="label4">About us</string>
 </resources>

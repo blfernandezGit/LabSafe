@@ -52,6 +52,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import edu.upd.engg.cheintel.labsafe.adapter.CardList;
+
 public class SecondActivity extends AppCompatActivity {
     HashMap<String, Integer> map;
     List<String> current;
@@ -107,8 +109,10 @@ public class SecondActivity extends AppCompatActivity {
                 continue;
             current.add(toAdd);
         }
-        ArrayAdapter<String> aao = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, current);
+        CardList aao = new CardList(SecondActivity.this, (ArrayList<String>) current);
         listView.setAdapter(aao);
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
     }
 
     private void loadOntology() throws Exception {
@@ -226,5 +230,10 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 }
             }
+    }
+
+    public void home (View view){
+        Intent intent = new Intent(SecondActivity.this, WhereIsYourEmergency.class);
+        startActivity(intent);
     }
 }
