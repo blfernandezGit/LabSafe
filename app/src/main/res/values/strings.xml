@@ -2,10 +2,16 @@
     <string name="app_name">LabSafe</string>
     <string name="chem_data">LabSafe Chemical Database</string>
     <string name="emergency">LabSafe Emergency List</string>
-    <string name="hint">What is your emergency?</string>
     <string name="desc">Image</string>
     <string name="label1">What is your emergency?</string>
     <string name="label2">Chemical Database</string>
     <string name="label3">Rate us</string>
     <string name="label4">About us</string>
+    <string name="lvl1">High lvl 4</string>
+    <string name="lvl2">Low lvl 0</string>
+    <string name="about_body">\n \n \t This application has been distributed by Apuya, Escobar, and Fernandez, 5th year Chemical Engineering students from UPD.
+        \n \n \t The app is a helpful tool for laboratory safety and first aid procedures, and an improvement on the LabSafe application that was first designed by Lim, Lutao, and Saluta.
+        \n \n \t Some minor updates may be expected during the course of the testing.
+        \n \n \t We would appreciate critical feedback by the end of the testing period, by the last week of April.
+        \n \n \t Thank you and we wish you the best of luck with your lab work! :)</string>
 </resources>

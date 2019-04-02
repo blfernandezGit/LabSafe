@@ -117,7 +117,7 @@ public class SecondActivity extends AppCompatActivity {
 
     private void loadOntology() throws Exception {
         OWLOntologyManager oom = OWLManager.createOWLOntologyManager();
-        o = oom.loadOntologyFromOntologyDocument(this.getAssets().open("OntologySplit1_v1.0.8.owl"));
+        o = oom.loadOntologyFromOntologyDocument(this.getAssets().open("OntologySplit1_v1.0.9.owl"));
         df = oom.getOWLDataFactory();
         String base = "http://www.semanticweb.org/thomasm.lutao/azescobar/ontologies/2017/9/MSDSOntologySplit1-nopropsvers";
         PrefixManager pm = new DefaultPrefixManager(base);
@@ -162,6 +162,32 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                                 map.put(label2, chemicalLevel);
                             }
+                        }
+                    }
+                    if (selected.equals("Spill")) {
+                        OWLObjectProperty objectProperty = df.getOWLObjectProperty("#" + "hasLargeSpill", pm);
+                        for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(indiv, objectProperty).getFlattened()) {
+                                String label2 = chemicalObjectProperty.getIRI().getFragment();
+                                Integer chemicalLevel = 0;
+                                for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                    if (annotation.getValue() instanceof OWLLiteral) {
+                                        OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                        label2 = val.getLiteral();
+                                    }
+                                }
+                                map.put(label2, chemicalLevel);
+                        }
+                        objectProperty = df.getOWLObjectProperty("#" + "hasSmallSpill", pm);
+                        for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(indiv, objectProperty).getFlattened()) {
+                                String label2 = chemicalObjectProperty.getIRI().getFragment();
+                                Integer chemicalLevel = 0;
+                                for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                    if (annotation.getValue() instanceof OWLLiteral) {
+                                        OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                        label2 = val.getLiteral();
+                                    }
+                                }
+                                map.put(label2, chemicalLevel);
                         }
                     }
                     if (selected.equals("FireFighting")) {
@@ -209,9 +235,59 @@ public class SecondActivity extends AppCompatActivity {
                                 map.put(label2, chemicalLevel);
                             }
                         }
+                        objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidInhalation", pm);
+                        for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(indiv, objectProperty).getFlattened()) {
+                            OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
+                            for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                                String label2 = chemicalObjectProperty.getIRI().getFragment();
+                                String x = chemicalDataProperty.getLiteral();
+                                Integer chemicalLevel = Integer.parseInt(x);
+                                for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                    if (annotation.getValue() instanceof OWLLiteral) {
+                                        OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                        label2 = val.getLiteral();
+                                    }
+                                }
+                                map.put(label2, chemicalLevel);
+                            }
+                        }
+                    }
+                    if (selected.equals("Ingestion")) {
+                        OWLObjectProperty objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidIngestion", pm);
+                        for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(indiv, objectProperty).getFlattened()) {
+                            OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
+                            for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                                String label2 = chemicalObjectProperty.getIRI().getFragment();
+                                String x = chemicalDataProperty.getLiteral();
+                                Integer chemicalLevel = Integer.parseInt(x);
+                                for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                    if (annotation.getValue() instanceof OWLLiteral) {
+                                        OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                        label2 = val.getLiteral();
+                                    }
+                                }
+                                map.put(label2, chemicalLevel);
+                            }
+                        }
                     }
                     if (selected.equals("Skin Contact")) {
                         OWLObjectProperty objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidSeriousSkin", pm);
+                        for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(indiv, objectProperty).getFlattened()) {
+                            OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
+                            for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {
+                                String label2 = chemicalObjectProperty.getIRI().getFragment();
+                                String x = chemicalDataProperty.getLiteral();
+                                Integer chemicalLevel = Integer.parseInt(x);
+                                for (OWLAnnotation annotation : chemicalObjectProperty.getAnnotations(o, df.getRDFSLabel())) {
+                                    if (annotation.getValue() instanceof OWLLiteral) {
+                                        OWLLiteral val = (OWLLiteral) annotation.getValue();
+                                        label2 = val.getLiteral();
+                                    }
+                                }
+                                map.put(label2, chemicalLevel);
+                            }
+                        }
+                        objectProperty = df.getOWLObjectProperty("#" + "hasFirstAidSkin", pm);
                         for (OWLNamedIndividual chemicalObjectProperty : reasoner.getObjectPropertyValues(indiv, objectProperty).getFlattened()) {
                             OWLDataProperty dataProperty = df.getOWLDataProperty("#" + "hasStep", pm);
                             for (OWLLiteral chemicalDataProperty : reasoner.getDataPropertyValues(chemicalObjectProperty, dataProperty)) {

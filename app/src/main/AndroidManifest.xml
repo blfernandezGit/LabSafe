@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SecondActivity"></activity>
-        <activity android:name=".WhereIsYourEmergency">
+        <activity android:name=".WhereIsYourEmergency"
+            android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

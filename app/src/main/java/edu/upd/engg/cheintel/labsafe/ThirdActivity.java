@@ -4,33 +4,17 @@ package edu.upd.engg.cheintel.labsafe;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
     import android.support.v7.widget.Toolbar;
-    import android.text.method.ScrollingMovementMethod;
     import android.view.View;
-    import android.widget.ImageView;
-    import android.widget.TextView;
 
     import com.github.barteksc.pdfviewer.PDFView;
-    import org.semanticweb.owlapi.model.OWLClass;
-    import java.util.HashMap;
-    import java.util.List;
 
 public class ThirdActivity extends AppCompatActivity {
     Toolbar mToolbar;
-//    TextView mols;
-//    ImageView tols;
-    HashMap<String,OWLClass> map;
-    List<String> current;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
         mToolbar = findViewById(R.id.toolbar1);
-//        mols = findViewById(R.id.textView);
-//        tols = findViewById(R.id.imageView);
-//        mols.setMovementMethod(new ScrollingMovementMethod());
-        //String data = "";
-        //StringBuilder sbuffer = new StringBuilder();
-        //StringBuffer sbuffer = new StringBuffer();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mToolbar.setTitle(getIntent().getStringExtra("ChemicalName"));

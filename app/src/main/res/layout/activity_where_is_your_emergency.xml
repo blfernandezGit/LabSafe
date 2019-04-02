@@ -6,15 +6,67 @@
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
     tools:context=".WhereIsYourEmergency">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline11"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75"/>
+    <TextView
+        android:id="@+id/highLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        app:layout_constraintRight_toLeftOf="@id/guideline11"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline1"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        android:text="@string/lvl1"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        />
+    <TextView
+        android:id="@+id/lowLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@id/guideline12"
+        app:layout_constraintLeft_toRightOf="@id/legend"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/guideline1"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        android:text="@string/lvl2"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        />
+    <ImageView
+        android:id="@+id/legend"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="5:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".03"
+        android:contentDescription="@string/desc"
+        app:layout_constraintTop_toBottomOf="@id/guideline1"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        app:layout_constraintStart_toStartOf="@id/guideline11"
+        android:background="@drawable/legend"/>
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
@@ -42,12 +94,12 @@
         android:contentDescription="@string/desc"
         android:src="@drawable/logo2"/>
     <ImageView
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/desc"
-        android:visibility="gone"
-        android:src="@drawable/logo2"/>
+    android:id="@+id/loading"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/desc"
+    android:visibility="gone"
+    android:src="@drawable/logo2"/>
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
@@ -60,17 +112,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar1"
-        android:hint="@string/hint"
+        android:hint="@string/label1"
         app:backgroundTint="@color/colorPrimaryDark">
         <requestFocus />
     </EditText>
+    <EditText
+        android:id="@+id/editTextChemical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textCursorDrawable="@null"
+        android:textColor="@color/colorPrimaryDark"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar1"
+        android:hint="@string/label2"
+        app:backgroundTint="@color/colorPrimaryDark">
+        <requestFocus />
+    </EditText>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline0"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15"/>
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText"/>
+        app:layout_constraintTop_toBottomOf="@id/guideline0"/>
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
@@ -141,7 +215,6 @@
         app:layout_constraintTop_toBottomOf="@id/guideline4"
         app:layout_constraintLeft_toRightOf="@id/guideline3"
         android:background="@drawable/img_btn4"
-        android:onClick="rate"
         android:contentDescription="@string/desc"/>
     <android.support.constraint.Guideline
         android:id="@+id/guideline5"
@@ -245,4 +318,70 @@
         android:textAllCaps="true"
         android:textColor="@color/colorPrimaryDark"
         />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline13"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"/>
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/guideline13"
+        app:layout_constraintTop_toBottomOf="@id/guideline5"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        android:text="@string/label4"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent=".9"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="start"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/view2"
+        android:text="@string/about_body"
+        android:textColor="@android:color/black"
+        />
+    <ImageView
+        android:id="@+id/abLogo1"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".115"
+        android:contentDescription="@string/desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/uplogo"/>
+    <ImageView
+        android:id="@+id/abLogo2"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="3:5"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".115"
+        android:contentDescription="@string/desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/abLogo1"
+        android:background="@drawable/dchelogo"/>
+    <ImageView
+        android:id="@+id/abLogo3"
+        android:layout_width="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".115"
+        android:contentDescription="@string/desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/abLogo2"
+        android:background="@drawable/psellogo"/>
 </android.support.constraint.ConstraintLayout>
