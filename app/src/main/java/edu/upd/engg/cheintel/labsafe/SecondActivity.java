@@ -77,7 +77,7 @@ public class SecondActivity extends AppCompatActivity {
         if (bundle != null) {
             chemical = getIntent().getStringExtra("ChemicalName");
             selected = getIntent().getStringExtra("Selected");
-            mToolbar.setTitle(chemical+ " Emergency Steps");
+            mToolbar.setTitle(chemical + " " + selected);
         }
         try {
             loadOntology();

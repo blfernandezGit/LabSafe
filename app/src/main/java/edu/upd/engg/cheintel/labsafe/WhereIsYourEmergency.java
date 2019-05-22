@@ -96,13 +96,13 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     ImageView abLogo1;
     ImageView abLogo2;
     ImageView abLogo3;
+    ImageView abLogo4;
     View view2;
     ImageButton button1;
     ImageButton button2;
     ImageButton button3;
     ImageButton button4;
     ImageButton button5;
-    ImageButton github;
     TextView textView1;
     TextView textView2;
     TextView textView3;
@@ -161,6 +161,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         abLogo1 = findViewById(R.id.abLogo1);
         abLogo2 = findViewById(R.id.abLogo2);
         abLogo3 = findViewById(R.id.abLogo3);
+        abLogo4 = findViewById(R.id.abLogo4);
         legend = findViewById(R.id.legend);
         loading = findViewById(R.id.loading);
         button1 = findViewById(R.id.button1);
@@ -168,7 +169,6 @@ public class WhereIsYourEmergency extends AppCompatActivity {
         button3 = findViewById(R.id.button3);
         button4 = findViewById(R.id.button4);
         button5 = findViewById(R.id.button5);
-        github = findViewById(R.id.github);
         textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
         textView3 = findViewById(R.id.textView3);
@@ -725,10 +725,11 @@ public class WhereIsYourEmergency extends AppCompatActivity {
     }
 
     private void changeView() {
-        if ((state != 0)&&(state!=4)) {
+        if ((state != 0)&&(state!=4)&&(state!=-1)) {
             abLogo1.setVisibility(View.GONE);
             abLogo2.setVisibility(View.GONE);
             abLogo3.setVisibility(View.GONE);
+            abLogo4.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
             imageView1.setVisibility(View.GONE);
             loading.setVisibility(View.GONE);
@@ -736,7 +737,6 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             button2.setVisibility(View.GONE);
             button3.setVisibility(View.GONE);
             button4.setVisibility(View.GONE);
-            github.setVisibility(View.GONE);
             textView1.setVisibility(View.GONE);
             textView2.setVisibility(View.GONE);
             textView3.setVisibility(View.GONE);
@@ -816,6 +816,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             abLogo1.setVisibility(View.GONE);
             abLogo2.setVisibility(View.GONE);
             abLogo3.setVisibility(View.GONE);
+            abLogo4.setVisibility(View.GONE);
             textView5.setVisibility(View.GONE);
             legend.setVisibility(View.GONE);
             highLevel.setVisibility(View.GONE);
@@ -827,7 +828,6 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             button2.setVisibility(View.VISIBLE);
             button3.setVisibility(View.VISIBLE);
             button4.setVisibility(View.VISIBLE);
-            github.setVisibility(View.GONE);
             textView1.setVisibility(View.VISIBLE);
             textView2.setVisibility(View.VISIBLE);
             textView3.setVisibility(View.VISIBLE);
@@ -842,6 +842,7 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             abLogo1.setVisibility(View.VISIBLE);
             abLogo2.setVisibility(View.VISIBLE);
             abLogo3.setVisibility(View.VISIBLE);
+            abLogo4.setVisibility(View.VISIBLE);
             textView5.setVisibility(View.VISIBLE);
             textView6.setVisibility(View.VISIBLE);
             view2.setVisibility(View.GONE);
@@ -851,7 +852,6 @@ public class WhereIsYourEmergency extends AppCompatActivity {
             button2.setVisibility(View.GONE);
             button3.setVisibility(View.GONE);
             button4.setVisibility(View.GONE);
-            github.setVisibility(View.VISIBLE);
             textView1.setVisibility(View.GONE);
             textView2.setVisibility(View.GONE);
             textView3.setVisibility(View.GONE);
@@ -868,11 +868,6 @@ public class WhereIsYourEmergency extends AppCompatActivity {
 
     public void rate(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goo.gl/q64HES"));
-        startActivity(browserIntent);
-    }
-
-    public void github(View view) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://blfernandezgit.github.io/LabSafe/"));
         startActivity(browserIntent);
     }
 

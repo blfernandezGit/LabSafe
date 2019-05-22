@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="edu.upd.engg.cheintel.labsafe">
 
     <application
@@ -8,10 +9,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".SecondActivity"></activity>
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity
+            android:name=".SecondActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".WhereIsYourEmergency"
-            android:theme="@style/splashScreenTheme">
+            android:theme="@style/splashScreenTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +27,7 @@
         <activity
             android:name=".ThirdActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/chem_data" />
+            android:label="@string/chem_data"/>
     </application>
 
 </manifest>

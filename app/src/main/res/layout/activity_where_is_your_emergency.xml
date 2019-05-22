@@ -384,16 +384,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/abLogo2"
         android:background="@drawable/psellogo"/>
-    <ImageButton
-        android:id="@+id/github"
+    <ImageView
+        android:id="@+id/abLogo4"
         android:layout_width="0dp"
         app:layout_constraintDimensionRatio="1:1"
         android:layout_height="0dp"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent=".075"
+        app:layout_constraintHeight_percent=".115"
         android:contentDescription="@string/desc"
-        app:layout_constraintTop_toBottomOf="@id/textView5"
-        app:layout_constraintLeft_toLeftOf="@id/textView5"
-        android:background="@drawable/github"
-        android:onClick="github"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/abLogo3"
+        android:background="@drawable/cheintellogo"/>
 </android.support.constraint.ConstraintLayout>
